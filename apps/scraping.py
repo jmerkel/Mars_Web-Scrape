@@ -14,14 +14,18 @@ def scrape_all():
     news_title, news_paragraph = mars_news(browser)
     # Run all scraping functions and store results in dictionary
     data = {
-        #"news_title": news_title,
-        #"news_paragraph": news_paragraph,
-        #"featured_image": featured_image(browser),
-        #"facts": mars_facts(),
+        "news_title": news_title,
+        "news_paragraph": news_paragraph,
+        "featured_image": featured_image(browser),
+        "facts": mars_facts(),
         "hemispheres" : mars_hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
     return data
+
+def picNav(imgURL):
+    browser = Browser("chrome", executable_path='/usr/local/bin/chromedriver', headless=True)
+    browser.visit(imgURL)
 
 def mars_news(browser):
     # Visit the mars nasa news site
@@ -92,7 +96,7 @@ def mars_hemispheres(browser):
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     baseURL = 'https://astrogeology.usgs.gov'
 
-    df = pd.DataFrame(columns=['title', 'picture'])
+    dictList = []
 
     browser.visit(url)
     browser.is_element_present_by_css("thumb", wait_time=1)
@@ -109,15 +113,17 @@ def mars_hemispheres(browser):
         hemi_title = hemisphereSoup.find("h2", class_='title').get_text()
         img_url = f'{baseURL}{img_url_rel}'
 
-        #Add to dataframe
-        df = df.append({'title' : hemi_title, 'picture': img_url}, ignore_index=True)
+        #Add to dictionary
+        hemisphereDict = {}
+        hemisphereDict['img_url'] = img_url
+        hemisphereDict['title'] = hemi_title
+        dictList.append(hemisphereDict)
 
         browser.back()
         browser.is_element_present_by_css("thumb", wait_time=1)
         thumbnails = browser.find_by_tag('h3')
 
-    df.set_index('title', inplace=True)
-    return df.to_html()
+    return dictList
 
 
 

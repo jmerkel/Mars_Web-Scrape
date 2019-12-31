@@ -48,11 +48,31 @@
       </div>
 
       <!-- Hemisphere-->
-      <div class="row" id="mars-hemispheres">
+      <div class="row" id="mars-hemispheres-title">
         <div class="col-md-12">
-          <h4>{{ mars.hemispheres | safe}}</h4>
+          <h2>Mars Hemispheres</h2>
         </div>
-
+    </div>
+    <div class="row" id="mars-hemispheres">
+      <div class="col-md-12">
+        <table>
+          <tr>
+            <th>Hemisphere</th>
+          </tr>
+          <tr>
+            <td> <a href='/cerberus'>{{mars.hemispheres[0].title}}</a></td>
+          </tr>
+          <tr>
+            <td> <a href='/schiaparelli'>{{mars.hemispheres[1].title}}</a></td>
+          </tr>
+          <tr>
+            <td> <a href='/sytis'>{{mars.hemispheres[2].title}}</a></td>
+          </tr>
+          <tr>
+            <td> <a href='/valles'>{{mars.hemispheres[3].title}}</a></td>
+          </tr>
+        </table>
+      </div>
     </div>
  </body>
 </html>

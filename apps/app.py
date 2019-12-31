@@ -19,5 +19,34 @@ def scrape():
    mars.update({}, mars_data, upsert=True)
    return "Scraping Successful!"
 
+@app.route("/cerberus")
+def cerberus():
+    mars = mongo.db.mars
+    imgTitle = mars.hemispheres[0].title
+    imgPic = mars.hemispheres[0].img_url
+    scraping.picNav(imgPic)
+
+@app.route("/schiaparelli")
+def schiaparelli():
+    mars = mongo.db.mars
+    imgTitle = mars.hemispheres[1].title
+    imgPic = mars.hemispheres[1].img_url
+    return imgPic
+
+@app.route("/sytis")
+def sytis():
+    mars = mongo.db.mars
+    imgTitle = mars.hemispheres[2].title
+    imgPic = mars.hemispheres[2].img_url
+    return imgPic
+
+@app.route("/valles")
+def valles():
+    mars = mongo.db.mars
+    imgTitle = mars.hemispheres[3].title
+    imgPic = mars.hemispheres[3].img_url
+    return imgPic
+
+
 if __name__ == "__main__":
    app.run()

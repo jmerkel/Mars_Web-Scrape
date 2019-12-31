@@ -22,26 +22,26 @@ def scrape():
 @app.route("/cerberus")
 def cerberus():
     mars = mongo.db.mars.find_one()
-    imgPic = mars.dictList[0].img_url
-    return imgPic
+    imgPic = mars['hemispheres'][0]['img_url']
+    return redirect(imgPic)
 
 @app.route("/schiaparelli")
 def schiaparelli():
     mars = mongo.db.mars.find_one()
-    imgPic = mars.dictList[1].img_url
-    return f'{imgPic}'
+    imgPic = mars['hemispheres'][1]['img_url']
+    return redirect(imgPic)
 
-@app.route("/sytis")
-def sytis():
+@app.route("/syrtis")
+def syrtis():
     mars = mongo.db.mars.find_one()
-    imgPic = mars.dictList[2].img_url
-    return url_for(imgPic)
+    imgPic = mars['hemispheres'][2]['img_url']
+    return redirect(imgPic)
 
 @app.route("/valles")
 def valles():
     mars = mongo.db.mars.find_one()
-    imgPic = mars.dictList[3].img_url
-    return url_for(f'{imgPic}')
+    imgPic = mars['hemispheres'][3]['img_url']
+    return redirect(imgPic)
 
 
 if __name__ == "__main__":

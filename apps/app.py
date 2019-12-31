@@ -1,4 +1,4 @@
-from flask import Flask, render_template    # Render Template via Flask
+from flask import Flask, render_template, redirect, url_for    # Render Template via Flask
 from flask_pymongo import PyMongo           # Use PyMongo to interact with Mongo DB
 import scraping                             # Use scraping code
 
@@ -21,31 +21,27 @@ def scrape():
 
 @app.route("/cerberus")
 def cerberus():
-    mars = mongo.db.mars
-    imgTitle = mars.hemispheres[0].title
-    imgPic = mars.hemispheres[0].img_url
-    scraping.picNav(imgPic)
+    mars = mongo.db.mars.find_one()
+    imgPic = mars.dictList[0].img_url
+    return imgPic
 
 @app.route("/schiaparelli")
 def schiaparelli():
-    mars = mongo.db.mars
-    imgTitle = mars.hemispheres[1].title
-    imgPic = mars.hemispheres[1].img_url
-    return imgPic
+    mars = mongo.db.mars.find_one()
+    imgPic = mars.dictList[1].img_url
+    return f'{imgPic}'
 
 @app.route("/sytis")
 def sytis():
-    mars = mongo.db.mars
-    imgTitle = mars.hemispheres[2].title
-    imgPic = mars.hemispheres[2].img_url
-    return imgPic
+    mars = mongo.db.mars.find_one()
+    imgPic = mars.dictList[2].img_url
+    return url_for(imgPic)
 
 @app.route("/valles")
 def valles():
-    mars = mongo.db.mars
-    imgTitle = mars.hemispheres[3].title
-    imgPic = mars.hemispheres[3].img_url
-    return imgPic
+    mars = mongo.db.mars.find_one()
+    imgPic = mars.dictList[3].img_url
+    return url_for(f'{imgPic}')
 
 
 if __name__ == "__main__":

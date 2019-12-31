@@ -14,10 +14,11 @@ def scrape_all():
     news_title, news_paragraph = mars_news(browser)
     # Run all scraping functions and store results in dictionary
     data = {
-        "news_title": news_title,
-        "news_paragraph": news_paragraph,
-        "featured_image": featured_image(browser),
-        "facts": mars_facts(),
+        #"news_title": news_title,
+        #"news_paragraph": news_paragraph,
+        #"featured_image": featured_image(browser),
+        #"facts": mars_facts(),
+        "hemispheres" : mars_hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
     return data
@@ -45,8 +46,6 @@ def mars_news(browser):
     return news_title, news_p
 
 # ### Featured Images
-
-
 
 def featured_image(browser):
     # Visit URL
@@ -79,7 +78,7 @@ def featured_image(browser):
 
 def mars_facts():
     try:
-        # Parse first [0] table that is found
+        # Parse first table ([0]) that is found
         df = pd.read_html('http://space-facts.com/mars/')[0]
     except BaseException:
         return None
@@ -87,6 +86,41 @@ def mars_facts():
     df.columns=['description', 'value']     # Assign column names
     df.set_index('description', inplace=True)     # Specify index as description
     return df.to_html()
+
+# ### Hemispheres
+def mars_hemispheres(browser):
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    baseURL = 'https://astrogeology.usgs.gov'
+
+    df = pd.DataFrame(columns=['title', 'picture'])
+
+    browser.visit(url)
+    browser.is_element_present_by_css("thumb", wait_time=1)
+    thumbnails = browser.find_by_tag('h3')
+
+    for i in range(0,4):
+        thumbnails[i].click()
+
+        html = browser.html
+        hemisphereSoup = BeautifulSoup(html, 'html.parser')
+
+        # Find the relative image url
+        img_url_rel = hemisphereSoup.select_one('.wide-image').get("src")
+        hemi_title = hemisphereSoup.find("h2", class_='title').get_text()
+        img_url = f'{baseURL}{img_url_rel}'
+
+        #Add to dataframe
+        df = df.append({'title' : hemi_title, 'picture': img_url}, ignore_index=True)
+
+        browser.back()
+        browser.is_element_present_by_css("thumb", wait_time=1)
+        thumbnails = browser.find_by_tag('h3')
+
+    df.set_index('title', inplace=True)
+    return df.to_html()
+
+
+
 
 if __name__ == "__main__":
     # If running as script, print scraped data
